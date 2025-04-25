@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logger/logger.dart';
 
@@ -36,6 +37,11 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _pageChange() {
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -48,27 +54,32 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Contador actual:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              const Text('Titulo'),
+              Card(
+                color:const Color.fromARGB(255, 244, 162, 97),
+                margin: const EdgeInsets.all(50.0),
+                child: Column(
+                  children: <Widget>[
+                    const Text(textAlign: TextAlign.center, 'Flutter is an open source framework for building beautiful, natively compiled, multi-platform applications from a single codebase.'),
+                    Text('Contador: $_counter'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        FloatingActionButton(onPressed: _incrementCounter, child: SvgPicture.asset(tapIcon, width: 32.0)),
+                        FloatingActionButton(onPressed: _decreaseCounter, child: SvgPicture.asset(removeIcon, width: 32.0)),
+                        FloatingActionButton(onPressed: _resetCounter, child: SvgPicture.asset(resetIcon, width: 32.0)),
+                      ]
+                    ),
+                  ]
+                )
+              ),
+              FloatingActionButton(onPressed: _pageChange, child: const Text('Pagina 1'))
+            ]
+          ),
         ),
-      ),
-
-      
-
-      persistentFooterButtons: [
-        FloatingActionButton(onPressed: _incrementCounter, child: SvgPicture.asset(tapIcon, width: 32.0)),
-        FloatingActionButton(onPressed: _decreaseCounter, child: SvgPicture.asset(removeIcon, width: 32.0)),
-        FloatingActionButton(onPressed: _resetCounter, child: SvgPicture.asset(resetIcon, width: 32.0)),
-      ],
-    );
-  }
+      );
+    }
 }
