@@ -41,44 +41,79 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 
+
   @override
   Widget build(BuildContext context) {
 
     var logger = Logger();
     logger.d("Logger is working on MyHomePage widget!");
 
+    // Widget carta
+    Card titleCard = Card(
+      color:const Color.fromARGB(255, 244, 162, 97),
+      margin: const EdgeInsets.all(20),
+      child: 
+      Container( 
+        padding: const EdgeInsets.all(20),
+        child:
+          Column(
+            spacing: 10.0,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              const Text(textAlign: TextAlign.left, 'Flutter es un framework de código abierto de Google para crear hermosas aplicaciones multiplataforma compiladas de forma nativa a partir de una única base de código.'),
+              const SizedBox(height: 200),
+              Text('Contador: $_counter'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  FloatingActionButton(onPressed: _incrementCounter, child: SvgPicture.asset(tapIcon, width: 32.0)),
+                  FloatingActionButton(onPressed: _decreaseCounter, child: SvgPicture.asset(removeIcon, width: 32.0)),
+                  FloatingActionButton(onPressed: _resetCounter, child: SvgPicture.asset(resetIcon, width: 32.0)),
+                ]
+              ),
+            ]
+          )
+      )
+    );
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
+      //drawer: Drawer(child: const Text('holanda')),
       body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              const Text('Titulo'),
-              Card(
-                color:const Color.fromARGB(255, 244, 162, 97),
-                margin: const EdgeInsets.all(50.0),
-                child: Column(
-                  children: <Widget>[
-                    const Text(textAlign: TextAlign.center, 'Flutter is an open source framework for building beautiful, natively compiled, multi-platform applications from a single codebase.'),
-                    Text('Contador: $_counter'),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        FloatingActionButton(onPressed: _incrementCounter, child: SvgPicture.asset(tapIcon, width: 32.0)),
-                        FloatingActionButton(onPressed: _decreaseCounter, child: SvgPicture.asset(removeIcon, width: 32.0)),
-                        FloatingActionButton(onPressed: _resetCounter, child: SvgPicture.asset(resetIcon, width: 32.0)),
-                      ]
-                    ),
-                  ]
-                )
-              ),
-              FloatingActionButton(onPressed: _pageChange, child: const Text('Pagina 1'))
-            ]
-          ),
+        child: Column(
+          children: <Widget>[
+
+            // Carta
+            Expanded(child: titleCard),
+            
+            // Botones de abajo
+            Container(
+              padding: const EdgeInsets.all(20),
+              child:
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const SizedBox(),
+                    SizedBox( width: 160,
+                      child: 
+                        FloatingActionButton(
+                          onPressed: _pageChange, 
+                          child: const Text('Pagina 1'),
+                        )
+                    )
+                  ],
+                ),
+            )
+          ]
         ),
-      );
-    }
+      ),
+    );
+  }
+
+
+
+
 }
