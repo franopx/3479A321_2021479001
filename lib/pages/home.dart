@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:laboratorio/pages/list_content.dart';
 import 'package:logger/logger.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -36,11 +37,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _pageChange() {
-
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +62,9 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  FloatingActionButton(onPressed: _incrementCounter, child: SvgPicture.asset(tapIcon, width: 32.0)),
-                  FloatingActionButton(onPressed: _decreaseCounter, child: SvgPicture.asset(removeIcon, width: 32.0)),
-                  FloatingActionButton(onPressed: _resetCounter, child: SvgPicture.asset(resetIcon, width: 32.0)),
+                  ElevatedButton(onPressed: _incrementCounter, child: SvgPicture.asset(tapIcon, width: 32.0)),
+                  ElevatedButton(onPressed: _decreaseCounter, child: SvgPicture.asset(removeIcon, width: 32.0)),
+                  ElevatedButton(onPressed: _resetCounter, child: SvgPicture.asset(resetIcon, width: 32.0)),
                 ]
               ),
             ]
@@ -99,8 +95,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     const SizedBox(),
                     SizedBox( width: 160,
                       child: 
-                        FloatingActionButton(
-                          onPressed: _pageChange, 
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context, 
+                              MaterialPageRoute(
+                                builder: (context) => ListContentPage()
+                              )
+                            );
+                          }, 
                           child: const Text('Pagina 1'),
                         )
                     )
