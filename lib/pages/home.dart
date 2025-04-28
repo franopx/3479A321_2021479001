@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:laboratorio/pages/about.dart';
 import 'package:laboratorio/pages/list_content.dart';
 import 'package:logger/logger.dart';
 
@@ -31,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _resetCounter() {
+  void _resetCounter(context) {
     setState(() {
       _counter = 0;
     });
@@ -56,7 +57,8 @@ class _MyHomePageState extends State<MyHomePage> {
             spacing: 10.0,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              const Text(textAlign: TextAlign.left, 'Flutter es un framework de código abierto de Google para crear hermosas aplicaciones multiplataforma compiladas de forma nativa a partir de una única base de código.'),
+              const Icon(Icons.gamepad, size: 50.0),
+              const Text(textAlign: TextAlign.left, 'Todavía no se sabe si has ganado o perdido.'),
               const SizedBox(height: 200),
               Text('Contador: $_counter'),
               Row(
@@ -64,7 +66,25 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: <Widget>[
                   ElevatedButton(onPressed: _incrementCounter, child: SvgPicture.asset(tapIcon, width: 32.0)),
                   ElevatedButton(onPressed: _decreaseCounter, child: SvgPicture.asset(removeIcon, width: 32.0)),
-                  ElevatedButton(onPressed: _resetCounter, child: SvgPicture.asset(resetIcon, width: 32.0)),
+                  ElevatedButton(
+                    onPressed: () {
+                      if(_counter%2 == 0) {
+                        Navigator.push(
+                          context, 
+                          MaterialPageRoute(
+                            builder: (context) => ListContentPage()
+                          )
+                        );
+                      } else {
+                        Navigator.push(
+                          context, 
+                          MaterialPageRoute(
+                            builder: (context) => AboutPage()
+                          )
+                        );
+                      }
+                    }, 
+                    child: SvgPicture.asset(resetIcon, width: 32.0)),
                 ]
               ),
             ]
@@ -75,10 +95,11 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: const Text('Home'),
       ),
       //drawer: Drawer(child: const Text('holanda')),
-      body: Center(
+      body: Container(
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: <Widget>[
 
@@ -93,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const SizedBox(),
-                    SizedBox( width: 160,
+                    SizedBox(width: 160,
                       child: 
                         ElevatedButton(
                           onPressed: () {
