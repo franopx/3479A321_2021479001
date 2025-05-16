@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:laboratorio/pages/about.dart';
-import 'package:logger/logger.dart';
 
 class ListContentPage extends StatelessWidget {
 
@@ -9,22 +7,24 @@ class ListContentPage extends StatelessWidget {
     return;
   }
 
-  final List<String> elementos = [
+  final List<String> elements = [
     'Primer elemento',
     'Segundo elemento',
     'Tercer elemento',
     'Cuarto elemento'
   ];
 
+  ListContentPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     
     // Contenido
     Widget list = ListView.builder(
-      itemCount: elementos.length,
+      itemCount: elements.length,
       itemBuilder: (context, index) {
         return ListTile(
-          title: Text(elementos[index])
+          title: Text(elements[index])
         );
       },
     );

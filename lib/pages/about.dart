@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:logger/logger.dart';
 
 class AboutPage extends StatelessWidget {
+  const AboutPage({super.key});
+
 
   void onPressed() {
     return;
@@ -12,13 +12,10 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    Widget content = Container(
-      child:
-        Text('Acerca de la aplicación.'),
-    );
+    Widget content = Text('Acerca de la aplicación.');
 
 // Botones de navegación
-    Widget navigation_buttons = Container(
+    Widget navigationButtons = Container(
       padding: const EdgeInsets.all(20),
       child:
         Row(
@@ -46,7 +43,7 @@ class AboutPage extends StatelessWidget {
           Column(
             children: [
               Expanded(child: content),
-              navigation_buttons
+              navigationButtons
             ]
           )
       )
