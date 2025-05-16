@@ -54,8 +54,6 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: const EdgeInsets.all(20),
         child:
           Column(
-            spacing: 10.0,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               const Icon(Icons.gamepad, size: 50.0),
               const Text(textAlign: TextAlign.left, 'Todavía no se sabe si has ganado o perdido.'),
