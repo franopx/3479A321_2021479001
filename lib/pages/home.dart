@@ -32,11 +32,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _resetCounter(context) {
-    setState(() {
-      _counter = 0;
-    });
-  }
 
 
   @override
