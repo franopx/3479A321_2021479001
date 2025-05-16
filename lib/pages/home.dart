@@ -23,13 +23,16 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   
-var logger = Logger();
-  
+  var logger = Logger();
+ 
+
   @override
   void initState() {
     super.initState();
     logger.d('initState override');
+    logger.d('El widget se encuentra en el arbol: $mounted');
   }
+ 
   
 
   @override

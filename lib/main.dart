@@ -14,11 +14,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    var logger = Logger();
-    logger.d("Logger is working!");
-
-
     
     return ChangeNotifierProvider<AppData>(
       create: (context) => AppData(),
@@ -32,16 +27,6 @@ class MyApp extends StatelessWidget {
       )
     );
     
-    /*
-    return MaterialApp(
-      title: 'Tap App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Contador'),
-    );
-    */
   }
 }
 
