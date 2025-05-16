@@ -5,6 +5,12 @@ class AppData extends ChangeNotifier {
   int _counter = 0;
   int get counter => _counter;
 
+  String _userName = 'Player';
+  String get userName => _userName;
+
+  bool _isResetEnabled = true;
+  bool get isResetEnabled => _isResetEnabled;
+
   void incrementCounter() {
     _counter++;
     notifyListeners();
@@ -12,7 +18,6 @@ class AppData extends ChangeNotifier {
 
   void decreaseCounter() {
     _counter--;
-
     notifyListeners();
   }
 
@@ -21,4 +26,13 @@ class AppData extends ChangeNotifier {
     notifyListeners();
   }
 
+  void toggleReset() {
+    _isResetEnabled = !_isResetEnabled;
+    notifyListeners();
+  }
+
+  void changeUserName(String newUser) {
+    _userName = newUser;
+    notifyListeners();
+  }
 }

@@ -90,6 +90,7 @@ var logger = Logger();
         child:
           Column(
             children: <Widget>[
+              Text('User: ${appdata.userName}'),
               const Icon(Icons.gamepad, size: 50.0),
               const Text(textAlign: TextAlign.left, 'Todavía no se sabe si has ganado o perdido.'),
               const SizedBox(height: 200),
@@ -99,7 +100,7 @@ var logger = Logger();
                 children: <Widget>[
                   ElevatedButton(onPressed: context.read<AppData>().incrementCounter, child: SvgPicture.asset(tapIcon, width: 32.0)),
                   ElevatedButton(onPressed: context.read<AppData>().decreaseCounter, child: SvgPicture.asset(removeIcon, width: 32.0)),
-                  ElevatedButton(onPressed: context.read<AppData>().resetCounter, child: SvgPicture.asset(resetIcon, width: 32.0)),
+                  ElevatedButton(onPressed: appdata.isResetEnabled ? context.read<AppData>().resetCounter : null, child: SvgPicture.asset(resetIcon, width: 32.0)),
                 ]
               ),
             ]
