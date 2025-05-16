@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:laboratorio/pages/about.dart';
 import 'package:laboratorio/pages/list_content.dart';
+import 'package:laboratorio/provider.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -61,39 +62,20 @@ var logger = Logger();
     super.dispose();
     logger.d('dispose override');
   }
-  
+
   @override
   void reassemble() {
     super.reassemble();
     logger.d('reassemble override');
   }
 
-  int _counter = 0;
-
   String tapIcon = 'assets/icons/tap_icon.svg';
   String removeIcon = 'assets/icons/minus_icon.svg';
   String resetIcon = 'assets/icons/reset_icon.svg';
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  void _decreaseCounter() {
-    setState(() {
-      _counter--;
-    });
-  }
-
-  void _resetCounter() {
-    setState(() {
-      _counter = 0;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    var appdata = context.watch<AppData>();
 
     var logger = Logger();
     logger.d("Widget built");
@@ -111,13 +93,13 @@ var logger = Logger();
               const Icon(Icons.gamepad, size: 50.0),
               const Text(textAlign: TextAlign.left, 'Todavía no se sabe si has ganado o perdido.'),
               const SizedBox(height: 200),
-              Text('Contador: $_counter'),
+              Text('Contador: ${appdata.counter}'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  ElevatedButton(onPressed: _incrementCounter, child: SvgPicture.asset(tapIcon, width: 32.0)),
-                  ElevatedButton(onPressed: _decreaseCounter, child: SvgPicture.asset(removeIcon, width: 32.0)),
-                  ElevatedButton(onPressed: _resetCounter, child: SvgPicture.asset(resetIcon, width: 32.0)),
+                  ElevatedButton(onPressed: context.read<AppData>().incrementCounter, child: SvgPicture.asset(tapIcon, width: 32.0)),
+                  ElevatedButton(onPressed: context.read<AppData>().decreaseCounter, child: SvgPicture.asset(removeIcon, width: 32.0)),
+                  ElevatedButton(onPressed: context.read<AppData>().resetCounter, child: SvgPicture.asset(resetIcon, width: 32.0)),
                 ]
               ),
             ]
