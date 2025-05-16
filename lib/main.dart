@@ -19,7 +19,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Tap App',
       theme: ThemeData(
-        fontFamily: 'National Park',
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
       ),
