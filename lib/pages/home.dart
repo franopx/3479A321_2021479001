@@ -16,9 +16,58 @@ class MyHomePage extends StatefulWidget {
     logger.d("create_state");
     return _MyHomePageState();
   }
+
+  
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  
+var logger = Logger();
+  
+  @override
+  void initState() {
+    super.initState();
+    logger.d('initState override');
+  }
+  
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    logger.d('didChangeDependencies override');
+  }
+  
+
+  @override
+  void setState(VoidCallback fn) {
+    super.setState(fn);
+    logger.d('setState override');
+  }
+
+  @override
+  void didUpdateWidget(covariant MyHomePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    logger.d('didUpdateWidget override');
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    logger.d('deactivate override');
+  }
+  
+  @override
+  void dispose() {
+    super.dispose();
+    logger.d('dispose override');
+  }
+  
+  @override
+  void reassemble() {
+    super.reassemble();
+    logger.d('reassemble override');
+  }
+
   int _counter = 0;
 
   String tapIcon = 'assets/icons/tap_icon.svg';
@@ -37,13 +86,17 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-
+  void _resetCounter() {
+    setState(() {
+      _counter = 0;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
 
     var logger = Logger();
-    logger.d("Logger is working on MyHomePage widget!");
+    logger.d("Widget built");
 
     // Widget carta
     Card titleCard = Card(
@@ -64,25 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: <Widget>[
                   ElevatedButton(onPressed: _incrementCounter, child: SvgPicture.asset(tapIcon, width: 32.0)),
                   ElevatedButton(onPressed: _decreaseCounter, child: SvgPicture.asset(removeIcon, width: 32.0)),
-                  ElevatedButton(
-                    onPressed: () {
-                      if(_counter%2 == 0) {
-                        Navigator.push(
-                          context, 
-                          MaterialPageRoute(
-                            builder: (context) => ListContentPage()
-                          )
-                        );
-                      } else {
-                        Navigator.push(
-                          context, 
-                          MaterialPageRoute(
-                            builder: (context) => AboutPage()
-                          )
-                        );
-                      }
-                    }, 
-                    child: SvgPicture.asset(resetIcon, width: 32.0)),
+                  ElevatedButton(onPressed: _resetCounter, child: SvgPicture.asset(resetIcon, width: 32.0)),
                 ]
               ),
             ]
@@ -95,7 +130,6 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Home'),
       ),
-      //drawer: Drawer(child: const Text('holanda')),
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Column(
