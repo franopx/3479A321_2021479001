@@ -32,45 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
     logger.d('initState override');
     logger.d('El widget se encuentra en el arbol: $mounted');
   }
- 
-  
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    logger.d('didChangeDependencies override');
-  }
-  
-
-  @override
-  void setState(VoidCallback fn) {
-    super.setState(fn);
-    logger.d('setState override');
-  }
-
-  @override
-  void didUpdateWidget(covariant MyHomePage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    logger.d('didUpdateWidget override');
-  }
-
-  @override
-  void deactivate() {
-    super.deactivate();
-    logger.d('deactivate override');
-  }
-  
-  @override
-  void dispose() {
-    super.dispose();
-    logger.d('dispose override');
-  }
-
-  @override
-  void reassemble() {
-    super.reassemble();
-    logger.d('reassemble override');
-  }
 
   String tapIcon = 'assets/icons/tap_icon.svg';
   String removeIcon = 'assets/icons/minus_icon.svg';
@@ -80,8 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     var appdata = context.watch<AppData>();
 
-    var logger = Logger();
-    logger.d("Widget built");
 
     // Widget carta
     Card titleCard = Card(
