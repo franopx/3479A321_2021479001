@@ -31,25 +31,6 @@ class AboutPage extends StatelessWidget {
     );
       
 
-// Botones de navegación
-    Widget navigationButtons = Container(
-      padding: const EdgeInsets.all(20),
-      child:
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(width: 160,
-              child:
-                ElevatedButton(
-                  onPressed: () {Navigator.pop(context);}, 
-                  child: const Text('Volver')
-                )
-            ),
-            SizedBox(width: 160)
-          ],
-        ),
-  );
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -60,7 +41,6 @@ class AboutPage extends StatelessWidget {
           Column(
             children: [
               Expanded(child: content),
-              navigationButtons
             ]
           )
       )
