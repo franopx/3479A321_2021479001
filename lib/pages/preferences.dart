@@ -8,24 +8,7 @@ class PreferencesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    Widget navigationButtons = Container(
-      padding: const EdgeInsets.all(20),
-      child:
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(width: 160,
-              child:
-                ElevatedButton(
-                  onPressed: () {Navigator.pop(context);}, 
-                  child: const Text('Volver')
-                )
-            ),
-            SizedBox(width: 160)
-          ],
-        ),
-    );
-
+    var appdata = context.watch<AppData>();
 
     return Scaffold(
       appBar: AppBar(
@@ -36,7 +19,17 @@ class PreferencesPage extends StatelessWidget {
         child: 
           Column(
             children: [
-              navigationButtons
+              Text('Username: ${appdata.userName}'),
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Cambiar User Name',
+                ),
+                onChanged: (text) => {
+                  context.read<AppData>().changeUserName(text)
+                },
+              ),
+              ElevatedButton(onPressed: appdata.toggleReset, child: Text(appdata.isResetEnabled ? 'Reiniciar contador: Sí' : 'Reiniciar contador: No'))
             ]
           )
       )
