@@ -11,6 +11,9 @@ class AppData extends ChangeNotifier {
   bool _isResetEnabled = true;
   bool get isResetEnabled => _isResetEnabled;
 
+
+
+
   void incrementCounter() {
     _counter++;
     notifyListeners();
@@ -26,8 +29,8 @@ class AppData extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleReset() {
-    _isResetEnabled = !_isResetEnabled;
+  void toggleReset(bool value) {
+    _isResetEnabled = value;
     notifyListeners();
   }
 
