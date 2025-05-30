@@ -26,9 +26,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   
-  var logger = Logger();
-  
+  var logger = Logger();  
   bool _isResetEnabled = true;
+
+  String tapIcon = 'assets/icons/tap_icon.svg';
+  String removeIcon = 'assets/icons/minus_icon.svg';
+  String resetIcon = 'assets/icons/reset_icon.svg';
+
 
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
@@ -43,9 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _loadPreferences();
   }
 
-  String tapIcon = 'assets/icons/tap_icon.svg';
-  String removeIcon = 'assets/icons/minus_icon.svg';
-  String resetIcon = 'assets/icons/reset_icon.svg';
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +65,11 @@ class _MyHomePageState extends State<MyHomePage> {
           Column(
             children: <Widget>[
               Text('User: ${appdata.userName}'),
-              const Icon(Icons.gamepad, size: 50.0),
+              Image.network('https://fastly.picsum.photos/id/992/250/250.jpg?hmac=fyar7EWDoYx84BH1uASJnbX9XZDUX5wpYbbXLv1ybq8',
+                width: 250,
+                height: 250,
+                fit: BoxFit.cover,
+              ),
               const Text(textAlign: TextAlign.left, 'Todavía no se sabe si has ganado o perdido.'),
               const SizedBox(height: 200),
               Text('Contador: ${appdata.counter}'),
