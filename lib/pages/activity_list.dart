@@ -49,11 +49,11 @@ class _ActivityListPage extends State<ActivityListPage> {
       context: context, 
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Cambiar nombre'),
+          title: const Text('Cambiar nombre de actividad'),
           content: TextField(                
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              hintText: 'Cambiar User Name',
+              hintText: 'Nuevo nombre',
               ),
             onChanged: (text) => {
               setState(() {
@@ -65,26 +65,25 @@ class _ActivityListPage extends State<ActivityListPage> {
             TextButton(
               onPressed: () {
                 deleteActivity(currentActivity.id);
+                setState(() {});
                 Navigator.of(context).pop();
               },
-              child: Text('Delete')
+              child: Text('Borrar')
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               }, 
-              child: Text('No')
+              child: Text('Cancelar')
             ),
             TextButton(
               onPressed: () {
                 Activity newActivity = Activity(currentActivity.id, currentActivity.date, newName);
                 updateDog(newActivity);
-                setState(() {
-                  
-                });
+                setState(() {});
                 Navigator.of(context).pop();
               }, 
-              child: Text('Yes')
+              child: Text('Aceptar')
             ),
           ]
         );
