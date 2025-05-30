@@ -11,6 +11,8 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'dart:math';
+import 'package:http/http.dart' as http;
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -33,6 +35,27 @@ class _MyHomePageState extends State<MyHomePage> {
   String removeIcon = 'assets/icons/minus_icon.svg';
   String resetIcon = 'assets/icons/reset_icon.svg';
 
+  String imageUrl = 'https://picsum.photos/250?image=1';
+  void _getNewImage() async {
+    var randomId = Random().nextInt(100);    
+    final newImageUrl =  'https://picsum.photos/250?image=$randomId';
+    try {
+      final response = await http.head(Uri.parse(newImageUrl));
+      if (response.statusCode == 200) {
+        setState(() {
+          imageUrl = newImageUrl;
+        });
+      } else {
+        setState(() {
+          imageUrl = '';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        imageUrl = '';
+      });
+    }
+  }
 
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
@@ -46,8 +69,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _loadPreferences();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -65,12 +86,20 @@ class _MyHomePageState extends State<MyHomePage> {
           Column(
             children: <Widget>[
               Text('User: ${appdata.userName}'),
-              Image.network('https://fastly.picsum.photos/id/992/250/250.jpg?hmac=fyar7EWDoYx84BH1uASJnbX9XZDUX5wpYbbXLv1ybq8',
+              Image.network(imageUrl.isNotEmpty ? imageUrl : '',
                 width: 250,
                 height: 250,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, StackTrace) {
+                  return Center(
+                    child: Text(
+                      'Failed to load image',
+                      style: TextStyle(color: Colors.red),
+                    )
+                  );
+                },
               ),
-              const Text(textAlign: TextAlign.left, 'Todavía no se sabe si has ganado o perdido.'),
+              ElevatedButton(onPressed: () {setState(() {_getNewImage();});}, child: const Text('Buscar otra imagen')),
               const SizedBox(height: 200),
               Text('Contador: ${appdata.counter}'),
               Row(
