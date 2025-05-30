@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:laboratorio/provider.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class MyHomePage extends StatefulWidget {
@@ -25,13 +26,21 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   
   var logger = Logger();
- 
+  
+  bool _isResetEnabled = true;
+
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isResetEnabled = prefs.getBool('isResetEnabled') ?? false;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _loadPreferences();
   }
-
 
   String tapIcon = 'assets/icons/tap_icon.svg';
   String removeIcon = 'assets/icons/minus_icon.svg';
@@ -62,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: <Widget>[
                   ElevatedButton(onPressed: context.read<AppData>().incrementCounter, child: SvgPicture.asset(tapIcon, width: 32.0)),
                   ElevatedButton(onPressed: context.read<AppData>().decreaseCounter, child: SvgPicture.asset(removeIcon, width: 32.0)),
-                  ElevatedButton(onPressed: appdata.isResetEnabled ? context.read<AppData>().resetCounter : null, child: SvgPicture.asset(resetIcon, width: 32.0)),
+                  ElevatedButton(onPressed: _isResetEnabled ? context.read<AppData>().resetCounter : null, child: SvgPicture.asset(resetIcon, width: 32.0)),
                 ]
               ),
             ]
@@ -96,6 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text('Lista de elementos'),
               onTap: () {
+                Navigator.of(context).pop(); // cerrar el drawer
                 Navigator.push(
                   context, 
                   MaterialPageRoute(
@@ -108,18 +118,22 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text('Preferencias'),
               onTap: () {
+                Navigator.of(context).pop(); // cerrar el drawer
                 Navigator.push(
                   context, 
                   MaterialPageRoute(
                     builder: (context) => PreferencesPage()
                   )
-                );
+                ).then((_) {
+                  _loadPreferences();
+                });
               } 
             ),
 
             ListTile(
               title: const Text('Acerca de'),
               onTap: () {
+                Navigator.of(context).pop(); // cerrar el drawer
                 Navigator.push(
                   context, 
                   MaterialPageRoute(
