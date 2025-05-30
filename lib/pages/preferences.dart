@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:laboratorio/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:logger/logger.dart';
 
 class PreferencesPage extends StatefulWidget {
   const PreferencesPage({super.key});
@@ -18,9 +19,13 @@ class _PreferencesPage extends State<PreferencesPage> {
 
   bool _isResetEnabled = true;
 
+  var logger = Logger();
+
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
-    _isResetEnabled = prefs.getBool('isResetEnabled') ?? false;
+    setState(() {
+      _isResetEnabled = prefs.getBool('isResetEnabled') ?? false;
+    });
   }
 
   Future<void> _savePreferences() async {
@@ -30,7 +35,6 @@ class _PreferencesPage extends State<PreferencesPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadPreferences();
   }
@@ -66,9 +70,10 @@ class _PreferencesPage extends State<PreferencesPage> {
                   context.read<AppData>().changeUserName(text)
                 },
               ),
-              ListView(
+              Column(
                 children: [
                   Container(child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Botón de reiniciar'),
                       Switch(
