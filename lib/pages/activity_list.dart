@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:laboratorio/services/database_helper.dart';
 import 'package:laboratorio/entity/activity.dart';
 import 'package:logger/logger.dart';
+import 'package:path/path.dart';
 
 class ActivityListPage extends StatefulWidget {
   const ActivityListPage({super.key});
@@ -42,19 +43,80 @@ class _ActivityListPage extends State<ActivityListPage> {
     ];
   }
 
+  String newName = '';
+  Future<void> changeNameDialog(BuildContext context){
+    return showDialog(
+      context: context, 
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Cambiar nombre'),
+          content: TextField(                
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Cambiar User Name',
+              ),
+            onChanged: (text) => {
+              setState(() {
+                newName = text;
+            },)
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                deleteActivity(currentActivity.id);
+                Navigator.of(context).pop();
+              },
+              child: Text('Delete')
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              }, 
+              child: Text('No')
+            ),
+            TextButton(
+              onPressed: () {
+                Activity newActivity = Activity(currentActivity.id, currentActivity.date, newName);
+                updateDog(newActivity);
+                setState(() {
+                  
+                });
+                Navigator.of(context).pop();
+              }, 
+              child: Text('Yes')
+            ),
+          ]
+        );
+      }
+    );
+  }
+
+  Activity currentActivity = Activity(-1, '', '');
+  Future<void> updateDog(Activity activity) async {
+    final db = await _dbHelper.database;
+
+    await db.update(
+      'activities',
+      activity.toMap(),
+      where: 'id = ?',
+      whereArgs: [activity.id],
+    );
+  }
+
+  Future<void> deleteActivity(int id) async {
+  // Get a reference to the database.
+  final db = await _dbHelper.database;
+
+  await db.delete(
+    'activities',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+}
 
   @override
   Widget build(BuildContext context) {
-    
-    // Contenido
-    Widget list = ListView.builder(
-      itemCount: _activities.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(_activities[index].name)
-        );
-      },
-    );
 
     return Scaffold(
       appBar: AppBar(
@@ -77,14 +139,20 @@ class _ActivityListPage extends State<ActivityListPage> {
                     return Center(child: Text('No hay actividades'));
                   }
 
-                  final actividades = snapshot.data!;
+                  final activities = snapshot.data!;
                   return ListView.builder(
-                    itemCount: actividades.length,
+                    itemCount: activities.length,
                     itemBuilder: (context, index) {
-                      final actividad = actividades[index];
+                      final actv = activities[index];
                       return ListTile(
-                        title: Text(actividad.name),
-                        subtitle: Text(actividad.date),
+                        title: Text(actv.name),
+                        subtitle: Text(actv.date),
+                        onTap: () {
+                          setState(() {
+                            currentActivity = actv;
+                          });
+                          changeNameDialog(context);
+                        },
                       );
                     },
                   );
@@ -97,3 +165,4 @@ class _ActivityListPage extends State<ActivityListPage> {
     );
   }
 }
+

@@ -22,6 +22,7 @@ class _PreferencesPage extends State<PreferencesPage> {
 
   final DatabaseHelper _dbHelper = DatabaseHelper();
   bool _isResetEnabled = true;
+  String name = "Null"; 
 
   var logger = Logger();
 
@@ -41,12 +42,30 @@ class _PreferencesPage extends State<PreferencesPage> {
   void initState() {
     super.initState();
     _loadPreferences();
+    loadActivities();
   }
 
   @override
   void dispose() {
     _savePreferences();
     super.dispose();
+  }
+
+  List<Activity> _activities = [];
+  int lastId = 0;
+  void loadActivities() async {
+    _activities = await getActivities();
+    lastId = _activities.length;
+  }
+
+  Future<List<Activity>> getActivities() async {
+    final db = await _dbHelper.database;
+
+    final List<Map<String, Object?>> activityMap = await db.query('activities');
+    return [
+      for (final {'id': id as int, 'date': date as String, 'name': name as String} in activityMap)
+      Activity(id, date, name),
+    ];
   }
 
   Future<void> insertActivity(Activity act) async {
@@ -77,7 +96,9 @@ class _PreferencesPage extends State<PreferencesPage> {
                   hintText: 'Cambiar User Name',
                 ),
                 onChanged: (text) => {
-                  context.read<AppData>().changeUserName(text)
+                  setState(() {
+                    name = text;
+                  })
                 },
               ),
               Column(
@@ -103,15 +124,12 @@ class _PreferencesPage extends State<PreferencesPage> {
               Column(
                 children: [
                   ElevatedButton(onPressed: () {
-                    Activity activ1 = Activity(0, '2025-05-29', 'Actividad 1');
+                    Activity activ1 = Activity(lastId, '2025-05-29', name);
                     insertActivity(activ1);
-
-                  }, child: Text('Agregar actividad 1')),
-                  ElevatedButton(onPressed: () {
-                    Activity activ2 = Activity(1, '2025-05-29', 'Actividad 2');
-                    insertActivity(activ2);
-
-                  }, child: Text('Agregar actividad 2'))
+                    setState(() {
+                      lastId += 1;
+                    });
+                  }, child: Text('Agregar actividad')),
                 ],
               )
             ],
