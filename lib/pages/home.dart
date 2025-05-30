@@ -38,10 +38,11 @@ class _MyHomePageState extends State<MyHomePage> {
   String imageUrl = 'https://picsum.photos/250?image=1';
   void _getNewImage() async {
     var randomId = Random().nextInt(100);    
-    final newImageUrl =  'https://picsum.photos/250?image=$randomId';
+    final newImageUrl = 'https://picsum.photos/250?image=$randomId';
+    logger.d(newImageUrl);
     try {
       final response = await http.head(Uri.parse(newImageUrl));
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 404) {
         setState(() {
           imageUrl = newImageUrl;
         });
