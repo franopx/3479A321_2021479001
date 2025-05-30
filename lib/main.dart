@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:laboratorio/provider.dart';
+import 'package:laboratorio/services/database_helper.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'pages/home.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseHelper().initializeDatabase();
+
   runApp(const MyApp());
 }
 
