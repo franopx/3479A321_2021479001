@@ -34,10 +34,10 @@ class DatabaseHelper {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
-    CREATE TABLE [nombre_tabla] (
-    [nombrecolumna] INTEGER PRIMARY KEY,
-    [nombrecolumna] TEXT NOT NULL,
-    [nombrecolumna] TEXT NOT NULL
+    CREATE TABLE activities (
+    id INTEGER PRIMARY KEY,
+    date TEXT NOT NULL,
+    name TEXT NOT NULL
     )
     ''');
   }

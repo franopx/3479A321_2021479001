@@ -4,6 +4,9 @@ import 'package:laboratorio/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logger/logger.dart';
 
+import 'package:laboratorio/services/database_helper.dart';
+import 'package:laboratorio/entity/activity.dart';
+
 class PreferencesPage extends StatefulWidget {
   const PreferencesPage({super.key});
 
@@ -17,6 +20,7 @@ class PreferencesPage extends StatefulWidget {
 
 class _PreferencesPage extends State<PreferencesPage> {
 
+  final DatabaseHelper _dbHelper = DatabaseHelper();
   bool _isResetEnabled = true;
 
   var logger = Logger();
@@ -44,6 +48,12 @@ class _PreferencesPage extends State<PreferencesPage> {
     _savePreferences();
     super.dispose();
   }
+
+  Future<void> insertActivity(Activity act) async {
+    final db = await _dbHelper.database;
+    await db.insert('activities', act.toMap());
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -88,11 +98,25 @@ class _PreferencesPage extends State<PreferencesPage> {
                     ],
                   ))
                 ]
-              )
+              ),
+              SizedBox(height: 32,),
+              Column(
+                children: [
+                  ElevatedButton(onPressed: () {
+                    Activity activ1 = Activity(0, '2025-05-29', 'Actividad 1');
+                    insertActivity(activ1);
+
+                  }, child: Text('Agregar actividad 1')),
+                  ElevatedButton(onPressed: () {
+                    Activity activ2 = Activity(1, '2025-05-29', 'Actividad 2');
+                    insertActivity(activ2);
+
+                  }, child: Text('Agregar actividad 2'))
                 ],
               )
-              
-          )
+            ],
+          )    
+        )
       );
   }
 }

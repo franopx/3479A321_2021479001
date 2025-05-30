@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:laboratorio/pages/activity_list.dart';
 
 import 'package:laboratorio/pages/preferences.dart';
 import 'package:laboratorio/pages/list_content.dart';
@@ -109,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context, 
                   MaterialPageRoute(
-                    builder: (context) => ListContentPage()
+                    builder: (context) => ActivityListPage()
                   )
                 );
               } 
