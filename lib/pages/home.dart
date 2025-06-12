@@ -13,6 +13,8 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'dart:math';
+import 'package:http/http.dart' as http;
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -28,9 +30,35 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   
-  var logger = Logger();
-  
+  var logger = Logger();  
   bool _isResetEnabled = true;
+
+  String tapIcon = 'assets/icons/tap_icon.svg';
+  String removeIcon = 'assets/icons/minus_icon.svg';
+  String resetIcon = 'assets/icons/reset_icon.svg';
+
+  String imageUrl = 'https://picsum.photos/250?image=1';
+  void _getNewImage() async {
+    var randomId = Random().nextInt(100);    
+    final newImageUrl = 'https://picsum.photos/250?image=$randomId';
+    logger.d(newImageUrl);
+    try {
+      final response = await http.head(Uri.parse(newImageUrl));
+      if (response.statusCode == 200 || response.statusCode == 404) {
+        setState(() {
+          imageUrl = newImageUrl;
+        });
+      } else {
+        setState(() {
+          imageUrl = '';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        imageUrl = '';
+      });
+    }
+  }
 
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
@@ -55,12 +83,6 @@ class _MyHomePageState extends State<MyHomePage> {
     _loadPreferences(); 
   }
 
-
-
-  String tapIcon = 'assets/icons/tap_icon.svg';
-  String removeIcon = 'assets/icons/minus_icon.svg';
-  String resetIcon = 'assets/icons/reset_icon.svg';
-
   @override
   Widget build(BuildContext context) {
     var appdata = context.watch<AppData>();
@@ -77,8 +99,20 @@ class _MyHomePageState extends State<MyHomePage> {
           Column(
             children: <Widget>[
               Text('User: ${appdata.userName}'),
-              const Icon(Icons.gamepad, size: 50.0),
-              const Text(textAlign: TextAlign.left, 'Todavía no se sabe si has ganado o perdido.'),
+              Image.network(imageUrl.isNotEmpty ? imageUrl : '',
+                width: 250,
+                height: 250,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, StackTrace) {
+                  return Center(
+                    child: Text(
+                      'Failed to load image',
+                      style: TextStyle(color: Colors.red),
+                    )
+                  );
+                },
+              ),
+              ElevatedButton(onPressed: () {setState(() {_getNewImage();});}, child: const Text('Buscar otra imagen')),
               const SizedBox(height: 200),
               Text('Contador: ${appdata.counter}'),
               Row(
