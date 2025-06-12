@@ -1,5 +1,7 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:laboratorio/pages/activity_list.dart';
+import 'package:laboratorio/pages/camera.dart';
 
 import 'package:laboratorio/pages/preferences.dart';
 import 'package:laboratorio/pages/list_content.dart';
@@ -37,11 +39,23 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+
+  late CameraDescription firstCamera;
+  Future<void> _loadCamera() async
+  {
+    List<CameraDescription> cameras = await availableCameras();
+    setState(() {
+      firstCamera = cameras.first;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    _loadPreferences();
+    _loadPreferences(); 
   }
+
+
 
   String tapIcon = 'assets/icons/tap_icon.svg';
   String removeIcon = 'assets/icons/minus_icon.svg';
@@ -80,6 +94,20 @@ class _MyHomePageState extends State<MyHomePage> {
       )
     );
 
+
+    Future<void> _navigateToCamera() async {
+      await _loadCamera();
+
+      if(!context.mounted) return;
+      Navigator.of(context).pop(); // cerrar el drawer
+      final result = await Navigator.push(
+        context, 
+        MaterialPageRoute(
+          builder: (context) => CameraPage(camera: firstCamera)
+        )
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -101,6 +129,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   )
                 );
               } 
+            ),
+
+            ListTile(
+              title: const Text('Cámara'),
+              onTap: () {
+                _navigateToCamera();
+              },
             ),
             
             ListTile(
