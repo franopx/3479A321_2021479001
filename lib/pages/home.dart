@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:laboratorio/pages/activity_list.dart';
@@ -32,15 +34,22 @@ class _MyHomePageState extends State<MyHomePage> {
   
   var logger = Logger();  
   bool _isResetEnabled = true;
+  bool localImage = false;
 
   String tapIcon = 'assets/icons/tap_icon.svg';
   String removeIcon = 'assets/icons/minus_icon.svg';
   String resetIcon = 'assets/icons/reset_icon.svg';
+  String caretLeft = 'assets/icons/caret-left.svg';
+  String caretRight = 'assets/icons/caret-right.svg';
 
-  String imageUrl = 'https://picsum.photos/250?image=1';
+  String imageUrl = 'https://picsum.photos/640?image=1';
   void _getNewImage() async {
-    var randomId = Random().nextInt(100);    
-    final newImageUrl = 'https://picsum.photos/250?image=$randomId';
+    var randomId = Random().nextInt(100);
+    _imagePath = 'null';
+    setState(() {
+      localImage = false;
+    });
+    final newImageUrl = 'https://picsum.photos/640?image=$randomId';
     logger.d(newImageUrl);
     try {
       final response = await http.head(Uri.parse(newImageUrl));
@@ -67,7 +76,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-
+  late List<String> imagePaths = [];
+  late String _imagePath = 'null';
   late CameraDescription firstCamera;
   Future<void> _loadCamera() async
   {
@@ -87,40 +97,103 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     var appdata = context.watch<AppData>();
 
+    Future<void> _navigateToCamera() async {
+      await _loadCamera();
+
+      if(!context.mounted) return;
+      final result = await Navigator.push(
+        context, 
+        MaterialPageRoute(
+          builder: (context) => CameraPage(camera: firstCamera)
+        )
+      );
+
+      if(!context.mounted) return;
+      setState(() {
+        if(result != null) {
+          
+          _imagePath = result;
+          imagePaths.add(_imagePath);
+          setState(() {
+            appdata.setCounter(imagePaths.length-1);
+            localImage = true;
+          });
+          
+        }  
+      });
+    }
 
     // Widget carta
     Card titleCard = Card(
       color:const Color.fromARGB(255, 244, 162, 97),
-      margin: const EdgeInsets.all(20),
+      margin: const EdgeInsets.all(10),
       child: 
-      Container( 
+      Padding( 
         padding: const EdgeInsets.all(20),
         child:
           Column(
-            children: <Widget>[
-              Text('User: ${appdata.userName}'),
-              Image.network(imageUrl.isNotEmpty ? imageUrl : '',
-                width: 250,
-                height: 250,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, StackTrace) {
-                  return Center(
-                    child: Text(
-                      'Failed to load image',
-                      style: TextStyle(color: Colors.red),
-                    )
-                  );
-                },
+            children: [
+              SizedBox(height: 5,),              
+                
+              Flexible(
+                child:
+                  AspectRatio(
+                    aspectRatio: 9 / 16,
+                    child:
+                      imagePaths.isEmpty || !localImage ?
+                        Image.network(imageUrl.isNotEmpty ? imageUrl : '',
+                          width: 360,
+                          height: 640,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, StackTrace) {
+                            return Center(
+                              child: Text(
+                                'Failed to load image, try again.',
+                                style: TextStyle(color: Colors.red),
+                              )
+                            );
+                          },
+                        ) :
+                        Image.file(
+                          File(imagePaths[appdata.counter]),
+                          width: 360,
+                          height: 640,
+                          fit: BoxFit.cover
+                        ),
+                  )
               ),
-              ElevatedButton(onPressed: () {setState(() {_getNewImage();});}, child: const Text('Buscar otra imagen')),
-              const SizedBox(height: 200),
-              Text('Contador: ${appdata.counter}'),
+              
+              const SizedBox(height: 10),
+              
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(onPressed: () {setState(() {_getNewImage(); localImage = false;});}, child: const Text('Imagen de internet')),
+                  SizedBox(width: 5,),
+                  ElevatedButton(onPressed: () async {await _navigateToCamera();}, child: const Text('Abrir cámara'))
+                ],
+                ),
+              
+              const SizedBox(height: 10),
+              Text('Imagen en el dispositivo: ${appdata.counter+1}'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  ElevatedButton(onPressed: context.read<AppData>().incrementCounter, child: SvgPicture.asset(tapIcon, width: 32.0)),
-                  ElevatedButton(onPressed: context.read<AppData>().decreaseCounter, child: SvgPicture.asset(removeIcon, width: 32.0)),
-                  ElevatedButton(onPressed: _isResetEnabled ? context.read<AppData>().resetCounter : null, child: SvgPicture.asset(resetIcon, width: 32.0)),
+                  ElevatedButton(onPressed: () {
+                    context.read<AppData>().decreaseCounter();
+                      setState(() {
+                        if(imagePaths.isNotEmpty) localImage = true;
+                      });},
+                    child: SvgPicture.asset(caretLeft, width: 32.0)),
+                  ElevatedButton(onPressed: () {
+                    if (appdata.counter<imagePaths.length-1) {
+                      context.read<AppData>().incrementCounter();
+                      setState(() {
+                        if(imagePaths.isNotEmpty) localImage = true;
+                      });}
+                    },
+                    child: SvgPicture.asset(caretRight, width: 32.0)),
+                  //ElevatedButton(onPressed: _isResetEnabled ? context.read<AppData>().resetCounter : null, child: SvgPicture.asset(resetIcon, width: 32.0)),
                 ]
               ),
             ]
@@ -129,18 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
 
-    Future<void> _navigateToCamera() async {
-      await _loadCamera();
 
-      if(!context.mounted) return;
-      Navigator.of(context).pop(); // cerrar el drawer
-      final result = await Navigator.push(
-        context, 
-        MaterialPageRoute(
-          builder: (context) => CameraPage(camera: firstCamera)
-        )
-      );
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -168,10 +230,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text('Cámara'),
               onTap: () {
+                Navigator.of(context).pop(); // cerrar el drawer
                 _navigateToCamera();
               },
             ),
-            
+            /*
             ListTile(
               title: const Text('Lista de elementos'),
               onTap: () {
@@ -184,7 +247,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               } 
             ),
-
+            
             ListTile(
               title: const Text('Preferencias'),
               onTap: () {
@@ -199,7 +262,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 });
               } 
             ),
-
+            */
             ListTile(
               title: const Text('Acerca de'),
               onTap: () {
@@ -216,7 +279,7 @@ class _MyHomePageState extends State<MyHomePage> {
         )
       ),
       body: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(5),
         child: Column(
           children: <Widget>[
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'dart:math';
 
 class AppData extends ChangeNotifier {
   int _counter = 0;
@@ -12,7 +12,10 @@ class AppData extends ChangeNotifier {
   bool get isResetEnabled => _isResetEnabled;
 
 
-
+  void setCounter(int value) {
+    _counter = value;
+    notifyListeners();
+  }
 
   void incrementCounter() {
     _counter++;
@@ -21,6 +24,7 @@ class AppData extends ChangeNotifier {
 
   void decreaseCounter() {
     _counter--;
+    _counter = max(0, _counter);
     notifyListeners();
   }
 

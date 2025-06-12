@@ -35,6 +35,9 @@ flutter:
     - assets/icons/reset_icon.svg
     - assets/icons/tap_icon.svg
     - assets/icons/minus_icon.svg
+    - assets/icons/caret-left.svg
+    - assets/icons/caret-right.svg
+    - assets/images/no_image.jpg
 
   fonts:
     - family: National Park

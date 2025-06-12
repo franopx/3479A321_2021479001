@@ -18,6 +18,7 @@ class _CameraPageState extends State<CameraPage> {
 
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
+  late String imagePath = 'null';
 
   Future<CameraDescription> getCamera() async {
     final cameras = await availableCameras();
@@ -53,11 +54,26 @@ class _CameraPageState extends State<CameraPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Cámara')),
       body: Center(
-        child: 
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: 
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+
+              Flexible(
+                child:
+                  AspectRatio(
+                    aspectRatio: 9/16,
+                    child:  imagePath == 'null' ?
+                    Image(image: AssetImage("assets/images/no_image.jpg"), fit: BoxFit.cover, width: 360, height: 640,) :
+                    Image.file(File(imagePath), fit: BoxFit.cover, width: 360, height: 640,),
+
+                    )
+              ),
+
               // photo
+              SizedBox(height: 20,),
+
               FractionallySizedBox(
                 widthFactor: 0.8,
                 child:
@@ -67,7 +83,7 @@ class _CameraPageState extends State<CameraPage> {
                       try {
                         await _initializeControllerFuture;
                         final image = await _controller.takePicture();
-
+                        /*
                         if (!context.mounted) return;
                         await Navigator.of(context).push(
                           MaterialPageRoute(
@@ -76,15 +92,47 @@ class _CameraPageState extends State<CameraPage> {
                             ),
                           ),
                         );
+                        */
+                        setState(() {
+                          imagePath = image.path;
+                        });
+                        
                       } catch (e) {
                         print(e);
                       }
                     }
                   )
               ),
+              SizedBox(height: 20,),
+              FractionallySizedBox(
+                widthFactor: 0.8,
+                child:
+                  FloatingActionButton(
+                    heroTag: null,
+                    child: const Text('Guardar fotografía'),
+                    onPressed: () async {
+                      if(!context.mounted) return;
+                      if(imagePath != 'null') Navigator.pop(context, imagePath);
+                    })
+              ),
+              SizedBox(height: 20,),
+              FractionallySizedBox(
+                widthFactor: 0.8,
+                child:
+                  FloatingActionButton(
+                    heroTag: null,
+                    child: const Text('Volver al home'),
+                    onPressed: () async {
+                      Navigator.pop(context);
+                    })
+              ),
+
+              SizedBox(height: 10,)
+              
             ],
           )
-      ,) 
+      ,)
+      )
     );
   }
 }
